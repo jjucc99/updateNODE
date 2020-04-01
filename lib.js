@@ -17,10 +17,10 @@ var tamplate = {
         </html>
     `;
     },
-    list: function(filelist){
+    list: function(topics){
         var list = '<ul>';
-        for(var i = 0; i < filelist.length; i++){
-        list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`;
+        for(var i = 0; i < topics.length; i++){
+        list = list + `<li><a href="/?id=${topics[i].id}">${topics[i].title}</a></li>`;
     }
         list = list+'</ul>';
         return list;

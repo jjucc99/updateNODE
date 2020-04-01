@@ -5,6 +5,14 @@ var qs = require('querystring')
 var templ = require('./lib.js')
 var path = require('path')
 var sanitazeHtml = require('sanitize-html')
+var mysql      = require('mysql');
+var db = mysql.createConnection({
+	host     : 'localhost',
+	user     : 'root',
+	password : 'Lkz*028web',
+	database : 'opentutorials'
+});
+db.connect();
 
 var app = http.createServer(function(request, response) {
 	var _url = request.url
@@ -12,14 +20,15 @@ var app = http.createServer(function(request, response) {
 	var pathname = url.parse(_url, true).pathname
 	if (pathname === '/') {
 		if (queryData.id === undefined) {
-			fs.readdir('./data', function(error, filelist) {
+			db.query(`select * from topic`, function(err, topics){
 				var title = 'Welcome'
 				var description = 'Hello, Node.js'
-				var list = templ.list(filelist)
+				var list = templ.list(topics)
 				var template = templ.HTML(title, list, `<h2>${title}</h2>${description}`, `<a href="/create">create</a>`)
 				response.writeHead(200)
 				response.end(template)
 			})
+			
 		} else {
 			fs.readdir('./data', function(error, filelist) {
 				var fileterId = path.parse(queryData.id).base
