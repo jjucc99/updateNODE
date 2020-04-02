@@ -2,9 +2,36 @@ var http = require('http')
 var fs = require('fs')
 var url = require('url')
 var qs = require('querystring')
-var templ = require('./lib.js')
 var path = require('path')
 var sanitazeHtml = require('sanitize-html')
+
+var tamplates = {
+  HTML: function(title, list, body, control){
+      return `
+      <!doctype html>
+      <html>
+      <head>
+          <title>WEB1 - ${title}</title>
+          <meta charset="utf-8">
+      </head>
+      <body>
+          <h1><a href="/">WEB</a></h1>
+          ${list}
+          ${control}
+          ${body}
+      </body>
+      </html>
+  `;
+  },
+  list: function(list){
+      var list = '<ul>';
+      for(var i = 0; i < topics.length; i++){
+      list = list + `<li><a href="/?id=${topics[i]}">${topics[i]}</a></li>`;
+  }
+      list = list+'</ul>';
+      return list;
+  }
+}
 
 var app = http.createServer(function(request, response) {
 	var _url = request.url
@@ -15,8 +42,8 @@ var app = http.createServer(function(request, response) {
 			fs.readdir('./data', function(error, filelist) {
 				var title = 'Welcome'
 				var description = 'Hello, Node.js'
-				var list = templ.list(filelist)
-				var template = templ.HTML(title, list, `<h2>${title}</h2>${description}`, `<a href="/create">create</a>`)
+				var list = tamplates.list(filelist)
+				var template = tamplates.HTML(title, list, `<h2>${title}</h2>${description}`, `<a href="/create">create</a>`)
 				response.writeHead(200)
 				response.end(template)
 			})
@@ -25,19 +52,14 @@ var app = http.createServer(function(request, response) {
 				var fileterId = path.parse(queryData.id).base
 				fs.readFile(`data/${fileterId}`, 'utf8', function(err, description) {
 					var title = queryData.id
-					var list = templ.list(filelist)
+					var list = tamplates.list(filelist)
 					var sanitazedTitle = sanitazeHtml(title)
 					var sanitazedDescrip = sanitazeHtml(description)
-					var template = templ.HTML(
+					var template = tamplates.HTML(
 						sanitazedTitle,
 						list,
 						`<h2>${sanitazedTitle}</h2>${sanitazedDescrip}`,
-						`<a href="/create">create</a> 
-              <a href="/update?id=${sanitazedTitle}">update</a>
-              <form action="/delete_process" method="post">
-                <input type="hidden" name="id" value="${sanitazedTitle}">
-                <input type="submit" value="delete" onclick="alert('one more time')">
-              </form>`
+						`<a href="/create">create</a>`
 					)
 					response.writeHead(200)
 					response.end(template)
@@ -47,8 +69,8 @@ var app = http.createServer(function(request, response) {
 	} else if (pathname === '/create') {
 		fs.readdir('./data', function(error, filelist) {
 			var title = 'WEB - create'
-			var list = templ.list(filelist)
-			var template = templ.HTML(
+			var list = tamplates.list(filelist)
+			var template = tamplates.HTML(
 				title,
 				list,
 				`
@@ -86,10 +108,10 @@ var app = http.createServer(function(request, response) {
 			var filterId = path.parse(queryData.id).base
 			fs.readFile(`data/${filterId}`, 'utf8', function(err, description) {
 				var title = queryData.id
-				var list = templ.list(filelist)
+				var list = tamplates.list(filelist)
 				var sanitazedTitle = sanitazeHtml(title)
 				var sanitazedDescrip = sanitazeHtml(description)
-				var template = templ.HTML(
+				var template = tamplates.HTML(
 					sanitazedTitle,
 					list,
 					`
