@@ -39,3 +39,7 @@ body {
     z-index: -1;
     animation: fadeIn .5s linear;
 }
+
+span{
+    color : white;
+}
