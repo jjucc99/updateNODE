@@ -5,6 +5,7 @@ const bodyParser = require(`body-parser`);
 const compression = require(`compression`);
 const topicRouter = require(`./routes/topic`);
 const indexRouter = require(`./routes/index`)
+const loginRouter = require(`./routes/login`)
 const helmet = require(`helmet`);
 
 
@@ -32,6 +33,9 @@ app.use(`/topic`, topicRouter);
 
 // `/ `path로 접근하는 사이트들에게 미들웨어를 적용하겠다.
 app.use(`/`, indexRouter);
+
+app.use(`/login`, loginRouter)
+
 
 //보안 사고를 예방하는 미들웨어
 app.use(helmet());
