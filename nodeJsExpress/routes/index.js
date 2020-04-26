@@ -4,15 +4,20 @@ const template = require(`../lib/template.js`)
 
 
 router.get(`/`, function(request, response){
-    var title = 'Welcome';
-    var description = 'Hello, Node.js';
+    const title = 'Welcome';
+    const description = 'Hello, Node.js';
+    let authStatus = "<a href='/log'>logIn</a>"
+    if(request.isOwers === true){
+        authStatus = "<a href='/log/logout_process'>logOut</a>"
+    }
     var list = template.list(request.list);
     var html = template.HTML(title, list,
     `<h2>${title}</h2>${description}
     <img src ='hello.jpg' style="width : 300px; display : block; margin-top : 10px;">`,
-    `<a href="/topic/create">create</a>`
+    `<a href="/topic/create">create</a>`, authStatus
     );
 response.send(html);
 })
+
 
 module.exports = router;

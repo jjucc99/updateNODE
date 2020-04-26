@@ -8,6 +8,10 @@ const path = require('path');
 
 router.get(`/create`, function(request, response){
     var title = 'WEB - create';
+    let authStatus = "<a href='/log'>logIn</a>"
+    if(request.isOwers === true){
+        authStatus = "<a href='/log/logout_process'>logOut</a>"
+    }
     var list = template.list(request.list);
     var html = template.HTML(title, list, `
     <form action="/topic/create_process" method="post">
@@ -19,7 +23,7 @@ router.get(`/create`, function(request, response){
             <input type="submit">
         </p>
     </form>
-    `, '');
+    `, '',authStatus);
     response.send(html)
 })
 
@@ -42,6 +46,10 @@ router.post(`/create_process`, function(request, response){
     //정보를 전달하기 위해서 기존의 정보를 같이 보낸다.
 router.get('/update/:pageId', function(request, response){
     var filteredId = path.parse(request.params.pageId).base;
+    let authStatus = "<a href='/log'>logIn</a>"
+    if(request.isOwers === true){
+        authStatus = "<a href='/log/logout_process'>logOut</a>"
+    }
     fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
     if(err){
         throw err;
@@ -62,7 +70,7 @@ router.get('/update/:pageId', function(request, response){
         </form>
         `,
         `<a href="/topic/create">create</a> <a href="/topic/update/${title}">update</a>`
-        );
+        ,authStatus);
         response.send(html);
     });  
     })
@@ -98,6 +106,10 @@ router.post(`/delete_process`, function(request, response){
 // list를 클릭했을 때 item의 title 과 description을 화면에 나타내는 item 화면
 router.get(`/:pageId`, function(request, response, next){
     var filteredId = path.parse(request.params.pageId).base;
+    let authStatus = "<a href='/log'>logIn</a>"
+    if(request.isOwers === true){
+        authStatus = "<a href='/log/logout_process'>logOut</a>"
+    }
     fs.readFile(`data/${filteredId}`, 'utf8', function(err2, description){
         if(err2){
             next(err2);
@@ -116,7 +128,7 @@ router.get(`/:pageId`, function(request, response, next){
             <input type="hidden" name="id" value="${sanitizedTitle}">
                 <input type="submit" value="delete">
             </form>`
-            );
+            ,authStatus);
         response.send(html);
         }
     });
