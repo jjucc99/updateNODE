@@ -1,4 +1,4 @@
-const toDoList = document.querySelector('.js-toDoList'),
+const toDoList = document.querySelector('#js-toDoList'),
     toDoForm = document.querySelector('.js-todoForm'),
     toDoInput = toDoForm.querySelector('input'); 
 
@@ -9,6 +9,9 @@ let toDos = [];
 function deleteToDo(event){
     const btn  = event.target;
     const li = btn.parentNode;
+    const mother =li.parentNode;
+    console.log(mother.id);
+    console.log(mother.className);
 
     toDoList.removeChild(li);
     
@@ -59,6 +62,7 @@ function PaintParseToDo(element, index, all){
 
 function loadToDo(){
     const loadTodo = localStorage.getItem(TODOS_LS);
+    
     if(loadTodo !== null){
         const parseToDos = JSON.parse(loadTodo);
         parseToDos.forEach(PaintParseToDo);

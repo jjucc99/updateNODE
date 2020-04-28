@@ -91,11 +91,8 @@ function PaintParsePending(element, index, all){
 
 function pendingChangeToDo(event){
     const btn  = event.target;
-    console.log(btn.parentNode);
     const li = btn.parentNode;
-    const oldId = li.id;
     const text = li.childNodes[0].innerText;
-    const id = Math.floor(Math.random(100))
 
 
     const extartToDo = finishedToDo.filter(function(element, index, all){
