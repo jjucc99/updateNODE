@@ -5,10 +5,19 @@ const bodyParser = require(`body-parser`);
 const compression = require(`compression`);
 const topicRouter = require(`./routes/topic`);
 const indexRouter = require(`./routes/index`)
-const logRouter = require(`./routes/log`)
+const authRouter = require(`./routes/auth`)
 const helmet = require(`helmet`);
 const cookie = require('cookie');
+const session =require('express-session');
+const FileStore =require("session-file-store")(session);
 
+// 입력한 정보를 암호하는 미들웨어 => session
+app.use(session({
+  secret: 'fucking bitch',
+  resave: false,
+  saveUninitialized: true,
+  store:new FileStore()
+}))
 
 // 전송하는 파일을 분석하는 미들웨어
 // 'request.body'
@@ -50,9 +59,8 @@ app.use(`/topic`, topicRouter);
 
 // `/ `path로 접근하는 사이트들에게 미들웨어를 적용하겠다.
 app.use(`/`, indexRouter);
-
 // `/login' path로 접슨하는 사이트들에게 미들워어를 적용하겠다.
-app.use(`/log`, logRouter)
+app.use(`/auth`, authRouter)
 
 
 //보안 사고를 예방하는 미들웨어

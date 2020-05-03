@@ -1,5 +1,5 @@
 module.exports = {
-  HTML:function(title, list, body, control, authStatus = "<a href='/log'>logIn</a>"){
+  HTML:function(title, list, body, control, authStatus = "<a href='/auth'>logIn</a>"){
     return `
     <!doctype html>
     <html>

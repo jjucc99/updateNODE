@@ -6,9 +6,9 @@ const template = require(`../lib/template.js`)
 router.get(`/`, function(request, response){
     const title = 'Welcome';
     const description = 'Hello, Node.js';
-    let authStatus = "<a href='/log'>logIn</a>"
+    let authStatus = "<a href='/auth'>logIn</a>"
     if(request.isOwers === true){
-        authStatus = "<a href='/log/logout_process'>logOut</a>"
+        authStatus = "<a href='/auth/logout_process'>logOut</a>"
     }
     var list = template.list(request.list);
     var html = template.HTML(title, list,

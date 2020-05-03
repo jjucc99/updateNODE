@@ -8,9 +8,9 @@ const path = require('path');
 
 router.get(`/create`, function(request, response){
     var title = 'WEB - create';
-    let authStatus = "<a href='/log'>logIn</a>"
+    let authStatus = "<a href='/auth'>logIn</a>"
     if(request.isOwers === true){
-        authStatus = "<a href='/log/logout_process'>logOut</a>"
+        authStatus = "<a href='/auth/logout_process'>logOut</a>"
     }
     var list = template.list(request.list);
     var html = template.HTML(title, list, `
@@ -33,6 +33,11 @@ router.get(`/create`, function(request, response){
 //create 페이지에서 정보를 전달 받는 페이지
 //받은 정보를 분석해서 문서를 만들고 파일에 저장한다.
 router.post(`/create_process`, function(request, response){
+    if(request.isOwers ===  false){
+        response.send(`Login required!! <a href="/auth">Now login</a>
+    <a href="/">Now hom</a>`);
+        return false
+    }
     var post = request.body
     var title = post.title;
     var description = post.description;
@@ -45,10 +50,15 @@ router.post(`/create_process`, function(request, response){
     //바꾸고 싶은 정보를 update_process에 전달하는 페이지
     //정보를 전달하기 위해서 기존의 정보를 같이 보낸다.
 router.get('/update/:pageId', function(request, response){
+    if(request.isOwers ===  false){
+        response.send(`Login required!! <a href="/auth">Now login</a>
+    <a href="/">Now hom</a>`);
+        return false
+    }
     var filteredId = path.parse(request.params.pageId).base;
-    let authStatus = "<a href='/log'>logIn</a>"
+    let authStatus = "<a href='/auth'>logIn</a>"
     if(request.isOwers === true){
-        authStatus = "<a href='/log/logout_process'>logOut</a>"
+        authStatus = "<a href='/auth/logout_process'>logOut</a>"
     }
     fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
     if(err){
@@ -79,6 +89,11 @@ router.get('/update/:pageId', function(request, response){
     // 기존의 정보를 기반으로 페이지를 찾고 다시 저장한다.
 
 router.post(`/update_process`, function(request, response){
+    if(request.isOwers ===  false){
+        response.send(`Login required!! <a href="/auth">Now login</a>
+    <a href="/">Now hom</a>`);
+        return false
+    }
     var post = request.body
     var id = post.id;
     var title = post.title;
@@ -93,6 +108,11 @@ router.post(`/update_process`, function(request, response){
     // 원하는 정보를 삭제하는 페이지
     // form안에 내장되어 있는 정보를 받아서 삭제한다.
 router.post(`/delete_process`, function(request, response){
+    if(request.isOwers ===  false){
+        response.send(`Login required!! <a href="/auth">Now login</a>
+    <a href="/">Now hom</a>`);
+        return false
+    }
     var post = request.body;
     var id = post.id;
     var filteredId = path.parse(id).base;
@@ -105,10 +125,15 @@ router.post(`/delete_process`, function(request, response){
 // 페이지에 접속하면 맨 처음 보게 되는 메인화면 
 // list를 클릭했을 때 item의 title 과 description을 화면에 나타내는 item 화면
 router.get(`/:pageId`, function(request, response, next){
+    if(request.isOwers ===  false){
+        response.send(`Login required!! <a href="/auth">Now login</a>
+    <a href="/">Now hom</a>`);
+        return false
+    }
     var filteredId = path.parse(request.params.pageId).base;
-    let authStatus = "<a href='/log'>logIn</a>"
+    let authStatus = "<a href='/auth'>logIn</a>"
     if(request.isOwers === true){
-        authStatus = "<a href='/log/logout_process'>logOut</a>"
+        authStatus = "<a href='/auth/logout_process'>logOut</a>"
     }
     fs.readFile(`data/${filteredId}`, 'utf8', function(err2, description){
         if(err2){
